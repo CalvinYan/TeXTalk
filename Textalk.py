@@ -18,7 +18,11 @@ def parsestr(s):
     conv = convert(s)
     if len(s.split()) == 1:
         return conv, s
-    return conv, calculate(conv)
+    a, b = conv, calculate(conv)
+    if 'Incorrect' in b :
+        return conv, calculate(s)
+    else:
+        return a, b
 
 def convert(s):
     return convert_fractions(convert_to_proto(s))
