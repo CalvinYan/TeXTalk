@@ -28,5 +28,5 @@ def calculate(str):
 
 
 
-a = 'Benjamin Franklin'
-print(calculate(a))
+#a = 'Benjamin Franklin'
+#print(calculate(a))

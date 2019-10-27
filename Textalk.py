@@ -15,9 +15,10 @@ with open('./data/substituted_words.csv', 'r') as file:
             words_substituted[row[0]] = row[1]
 
 def parsestr(s):
+    conv = convert(s)
     if len(s.split()) == 1:
-        return convert(s), s
-    return convert(s), calculate(s)
+        return conv, s
+    return conv, calculate(conv)
 
 def convert(s):
     return convert_fractions(convert_to_proto(s))
@@ -59,7 +60,7 @@ def parsestr_numeric(s):
 
 def parsestr_substitute(s):
     for phrase in sorted(words_substituted.keys(), key=lambda k: len(k.split())):
-        print(phrase, phrase in s)
+        #print(phrase, phrase in s)
         s = s.replace(phrase, words_substituted[phrase])
     return s
 

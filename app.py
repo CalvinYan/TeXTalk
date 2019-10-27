@@ -17,6 +17,7 @@ def record():
         audio = r.listen(source)
     text = r.recognize_google(audio)
     converted, calculated = Textalk.parsestr(text)
+    print(converted,calculated)
     if 'Incorrect' in calculated:
         return render_template('Display.html', converted = 'Error', calculated = calculated)
     return render_template('Display.html', converted = converted, calculated = calculated)
