@@ -3,11 +3,10 @@ import speech_recognition as sr
 
 app = Flask(__name__)
 @app.route('/')
-def hello_world():
+def index():
     return render_template('popup.html')
 
-
-@app.route('/record/', methods=['POST'])
+@app.route('/forward/', methods = ['POST'])
 def record():
     r = sr.Recognizer()
     mic = sr.Microphone()
@@ -15,4 +14,4 @@ def record():
         r.adjust_for_ambient_noise(source)
         audio = r.listen(source)
     a = r.recognize_google(audio)
-    return jsonify({'speech': a})
+    return a
