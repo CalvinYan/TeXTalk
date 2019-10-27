@@ -25,11 +25,4 @@ def calculate(str):
         return res
     except:
         return "Incorrect input. Try again"
-<<<<<<< HEAD
-=======
-
-
-
-#a = 'Benjamin Franklin'
-#print(calculate(a))
->>>>>>> 54445cd956817c64d5d1d73de6fc6d959cedef7c
+        
