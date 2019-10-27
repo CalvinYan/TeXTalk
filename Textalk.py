@@ -76,7 +76,7 @@ def parsestr_numeric(s):
     return s
 
 def parsestr_substitute(s):
-    for phrase in sorted(words_substituted.keys(), key=lambda k: len(k.split()) * 10 + (len(k) == 1 and len(k[0]))):
+    for phrase in sorted(words_substituted.keys(), key=lambda k: -(len(k.split()) * 10 + (len(k) == 1 and len(k[0])))):
         # print(phrase, phrase in s)
         s = s.replace(phrase, words_substituted[phrase])
     return s
