@@ -66,3 +66,4 @@ def parsestr(s):
 
 print(parsestr_numeric('Your total is four thousand two hundred ninety one dollars sixty seven cents and one hundred seventeen unborn fetuses'))
 print(parsestr_numeric(parsestr_substitute('one plus two minus three times four equals zero')))
+print(parsestr_numeric(parsestr_substitute('I hate epsilon delta proofs')))
