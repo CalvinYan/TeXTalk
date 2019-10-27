@@ -22,8 +22,7 @@ def parsestr(s):
     #         else:
     #             s = s.replace(key, d[key](s))
     # return s
-    calculate(s)
-    return parsestr_numeric(parsestr_substitute(s))
+    return parsestr_numeric(parsestr_substitute(s)), calculate(s)
 
 def parsestr_numeric(s):
     words = s.split()
