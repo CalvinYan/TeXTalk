@@ -6,6 +6,7 @@ appId = "E6A599-295PX2RKJE"
 client = wolframalpha.Client(appId)
 
 r = sr.Recognizer()
+r.pause_threshold = 1.5
 mic = sr.Microphone()
 
 '''uncomment for mic functionality
