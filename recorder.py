@@ -22,11 +22,6 @@ a= 'e^x/x^2 = 15'
 def calculate(str):
     try:
         res = client.query(str)
-        return next(res.results).text
+        return res
     except:
         return "Incorrect input. Try again"
-
-
-
-a = 'Benjamin Franklin'
-print(calculate(a))
