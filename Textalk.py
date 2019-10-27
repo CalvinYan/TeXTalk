@@ -59,6 +59,40 @@ def parsestr(s):
                 s = s.replace(key, d[key](s))
     return s
 
+# Returns a lst of indices containing <quantity and all>
+def quantity(s):
+    lst = []
+
+    def helper(s, index_lst):
+        if 'quantity' in s:
+            # Remember to add index by 1 more for end index because second l in all will not be included \
+            # in range() if not inclusive
+            start_index, end_index = s.find('quantity'), s.find('all') + 2
+            index_lst.append([start_index, end_index])
+            return helper(s[end_index:], index_lst)
+        return lst
+    return helper(s, lst)
+
+
+# Returns a list of the string segments containing <quantity and all>
+def quantity_checker(s, lst_of_indices):
+    str_lst = []
+
+    def checker(s, lst):
+        if lst:
+            start_index, end_index = lst[0][0], lst[0][1]
+            str_lst.append(s[start_index:end_index + 1])
+            lst.pop(0)
+            return checker(s[end_index:], lst)
+        return str_lst
+    return checker(s, lst_of_indices)
+
+# Check before printing final latex string
+def check(latex):
+    for word in l_d.keys():
+        if word in latex:
+            latex = latex.replace(word, l_d[word])
+    return latex
 
 # s = 'seventy one plus three'
 # new_s = parsestr(s)
@@ -67,3 +101,4 @@ def parsestr(s):
 print(parsestr_numeric('Your total is four thousand two hundred ninety one dollars sixty seven cents and one hundred seventeen unborn fetuses'))
 print(parsestr_numeric(parsestr_substitute('one plus two minus three times four equals zero')))
 print(parsestr_numeric(parsestr_substitute('I hate epsilon delta proofs')))
+
