@@ -15,70 +15,82 @@ with open('./data/substituted_words.csv', 'r') as file:
             words_substituted[row[0]] = row[1]
 
 def parsestr(s):
-    # for key in d.keys():
-    #     if key in s:
-    #         if type(d[key]) == str:
-    #             s = s.replace(key, d[key])
-    #         else:
-    #             s = s.replace(key, d[key](s))
-    # return s
-    return parsestr_numeric(parsestr_substitute(s)), calculate(s)
+    if len(s.split()) == 1:
+        return convert(s), s
+    return convert(s), calculate(s)
+
+def convert(s):
+    return convert_fractions(convert_to_proto(s))
+
+def convert_fractions(s):
+    def get_subformula(index, direction):
+        counter = 0
+        while True:
+            if s[index] == '(':
+                if direction > 0: counter += 1
+                else: counter -= 1
+            elif s[index] == ')':
+                if direction > 0: counter -= 1
+                else: counter += 1
+            if counter == 0: return index if direction < 0 else index + 1
+            index += direction
+
+    while '/' in s:
+        index = s.find('/')
+        start_index, end_index = get_subformula(index-1, -1), get_subformula(index+1, 1)
+        # print(index, start_index, end_index)
+        s = s[:start_index] + '\\frac{' + s[start_index:index] + '}{' + s[index+1:end_index] + '}' + s[end_index:]
+    return s
+
+
+def convert_to_proto(s):
+    return quantity(parsestr_numeric(parsestr_substitute(s))).replace(' ', '')
 
 def parsestr_numeric(s):
     words = s.split()
-    if not words: return ''
+    if len(words) == 0: return ''
     i = 0
     while i < len(words) and words[i] in words_numeric:
         i = i + 1
-    # print('PARSING:', ' '.join(words[:i]))
     if i == 0:
         return words[0] + ' ' + parsestr_numeric(' '.join(words[1:]))
     s = str(w2n.word_to_num(' '.join(words[:i]))) + ' ' + parsestr_numeric(' '.join(words[i:]))
     return s
 
 def parsestr_substitute(s):
-    words = s.split()
-    for i in range(len(words)):
-        if words[i] in words_substituted:
-            words[i] = words_substituted[words[i]]
-    return ' '.join(words)
+    for phrase in sorted(words_substituted.keys(), key=lambda k: len(k.split())):
+        print(phrase, phrase in s)
+        s = s.replace(phrase, words_substituted[phrase])
+    return s
 
 # Returns a lst of indices containing <quantity and all>
 def quantity(s):
     lst = []
+    while 'the quantity' in s and 'all' in s:
 
-    def helper(s, index_lst):
-        if 'quantity' in s:
-            # Remember to add index by 1 more for end index because second l in all will not be included \
-            # in range() if not inclusive
-            start_index, end_index = s.find('quantity'), s.find('all') + 2
-            index_lst.append([start_index, end_index])
-            return helper(s[end_index:], index_lst)
-        return lst
-    return helper(s, lst)
+        # Remember to add index by 1 more for end index because second l in all will not be included \
+        # in range() if not inclusive
+        start_index, end_index = s.find('the quantity'), s.find('all')
+        s = s[:start_index] + '(' + convert(s[start_index+len('the quantity'):end_index].strip()) + ')' + s[end_index+len('all'):]
+    while 'the quantity' in s:
+        start_index = s.find('the quantity')
+        s = s[:start_index] + '(' + convert(s[start_index+len('the quantity'):].strip()) + ')'
+    while 'all' in s:
+        end_index = s.find('all')
+        s = '(' + convert(s[:end_index]) + ')' + s[end_index+len('all'):]
+    return s
 
-
-# Returns a list of the string segments containing <quantity and all>
-def quantity_checker(s, lst_of_indices):
-    str_lst = []
-
-    def checker(s, lst):
-        if lst:
-            start_index, end_index = lst[0][0], lst[0][1]
-            str_lst.append(s[start_index:end_index + 1])
-            lst.pop(0)
-            return checker(s[end_index:], lst)
-        return str_lst
-    return checker(s, lst_of_indices)
-
-# Check before printing final latex string
-def check(latex):
-    for word in l_d.keys():
-        if word in latex:
-            latex = latex.replace(word, l_d[word])
-    return latex
 
 # print(parsestr('Your total is four thousand two hundred ninety one dollars sixty seven cents and one hundred seventeen unborn fetuses'))
 # print(parsestr('one plus two minus three times four equals zero'))
 # print(parsestr('I just did three hundred and sixty five epsilon delta proofs'))
-print(parsestr('The integral from zero to x times 5 of x plus x to the power of two'))
+# print(parsestr('The integral from zero to x times 5 of x plus x to the power of two'))
+# print(convert(quantity('4 times the quantity x squared over 2 all over 3')))
+# print(convert(quantity('4 times the quantity x squared over 2 all over 3 all over 5')))
+# print(convert(quantity('the quantity 4 times the quantity x squared over 2 all over 3 all over 5')))
+# print(convert_to_proto(quantity('x squared times the quantity the quantity alpha plus beta all over 2 + 5 is less than forty')))
+# print(convert_fractions('(1/2)/3'))
+# print(convert_to_proto('the quantity x squared plus four over three plus the quantity the quantity x plus six all over five all over the quantity x plus five x cubed all over three x plus x'))
+# print(convert_fractions(convert_to_proto('the quantity x squared plus four over three plus the quantity the quantity x plus six all over five all over the quantity x plus five x cubed all all over three x plus x')))
+# print(convert('the quantity negative b plus b squared minus four a c all over the quantity two a'))
+# print(convert('the integral of x squared equals one over three times x cubed'))

@@ -3,8 +3,25 @@ minus,-
 negative,-
 times,*
 divided by,/
+over,/
+is less than,<
+is less than or equal to,\leq
 equals,=
+is greater than,>
+is greater than or equal to,\geq
 factorial,!
+squared,^2
+cubed,^3
+the integral of,\int
+the limit of,\lim
+log,\log
+natural log,\ln
+sine,\sin
+cosine,\cos
+tan,\tan
+cotangent,\cot
+cosecant,\csc
+secant,\sec
 mod,\bmod
 to,\to
 infinity,\infty
